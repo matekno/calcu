@@ -1,5 +1,5 @@
 // Generado por herramientas/armar-sw.mjs: no editar a mano.
-const VERSION = 'f5a65cfa1a76';
+const VERSION = '439191628180';
 const CACHE = `calcu-${VERSION}`;
 const ARCHIVOS = [
   "./",

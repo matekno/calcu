@@ -9,22 +9,6 @@ MathfieldElement.keypressSound = null;
 MathfieldElement.plonkSound = null;
 MathfieldElement.fontsDirectory = new URL('../../vendor/mathlive/fonts/', import.meta.url).href;
 
-const EJEMPLOS = [
-  '\\frac{3}{4}+\\frac{5}{6}',
-  '\\left(\\frac{2}{3}\\right)^{2}\\cdot9-4',
-  '\\sqrt{72}',
-  '\\sin\\left(30\\degree\\right)+\\cos\\left(60\\degree\\right)',
-  '2x+3=7',
-  '\\frac{x}{3}+\\frac{1}{2}=\\frac{5}{6}',
-  'x^{2}-5x+6=0',
-  'x^{2}-4<0',
-  '\\log_{2}\\left(32\\right)',
-  '\\frac{d}{dx}\\left(x^{3}\\cdot\\sin\\left(x\\right)\\right)',
-  '\\int_{0}^{1}x^{2}\\,dx',
-  '\\binom{10}{3}',
-  '\\begin{cases}2x+3y=8\\\\x-y=-1\\end{cases}',
-];
-
 const TITULOS = {
   numero: 'Calcular', expresion: 'Simplificar', ecuacion: 'Resolver la ecuación',
   inecuacion: 'Resolver la inecuación', sistema: 'Resolver el sistema', logico: 'Comparar', error: 'No se pudo resolver',
@@ -282,19 +266,6 @@ export function iniciarCalculadora() {
     mf.value = '';
     previa.replaceChildren();
     mf.focus();
-  });
-
-  // ---- Ejemplos ----
-  const ejemplos = document.getElementById('ejemplos');
-  ejemplos.innerHTML = '<p class="ejemplos-titulo">Probá con</p>' + EJEMPLOS.map((e, i) => `<button class="ejemplo" data-i="${i}">${mathHTML(e)}</button>`).join('');
-  ejemplos.querySelectorAll('.ejemplo').forEach((b) => {
-    b.addEventListener('pointerdown', (e) => e.preventDefault());
-    b.addEventListener('click', () => {
-      mf.value = EJEMPLOS[Number(b.dataset.i)];
-      actualizarPrevia();
-      mf.focus();
-      mf.executeCommand('moveToMathfieldEnd');
-    });
   });
 
   crearTeclado(document.getElementById('teclado'), mf, {
