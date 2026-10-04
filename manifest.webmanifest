@@ -1,0 +1,18 @@
+{
+  "name": "Calcu: calculadora y distribuciones",
+  "short_name": "Calcu",
+  "description": "Calculadora offline con fracciones, trigonometría, ecuaciones paso a paso y distribuciones de probabilidad.",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f5f8",
+  "theme_color": "#e8590c",
+  "icons": [
+    { "src": "iconos/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "iconos/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "iconos/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "iconos/icono.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

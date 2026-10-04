@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Calcu</title>
+  <meta name="description" content="Calculadora offline: fracciones, trigonometría, ecuaciones con pasos y distribuciones de probabilidad.">
+  <meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Calcu">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="iconos/icono.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+  <link rel="stylesheet" href="vendor/mathlive/mathlive-fonts.css">
+  <link rel="stylesheet" href="vendor/mathlive/mathlive-static.css">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div id="app">
+    <header class="barra">
+      <div class="marca" aria-hidden="true"><span class="marca-logo">∑</span>Calcu</div>
+      <nav class="pestanas" role="tablist" aria-label="Secciones">
+        <button role="tab" id="tab-calc" data-vista="calc" aria-controls="vista-calc" aria-selected="true">Calculadora</button>
+        <button role="tab" id="tab-dist" data-vista="dist" aria-controls="vista-dist" aria-selected="false">Distribuciones</button>
+      </nav>
+      <button class="icono" id="btn-ajustes" aria-label="Ajustes" title="Ajustes">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm8.6 4.9-1.7-1 .1-.9-.1-.9 1.7-1.1a.6.6 0 0 0 .2-.8l-1.7-2.9a.6.6 0 0 0-.8-.2l-1.9.8a7 7 0 0 0-1.6-.9L14.5 3a.6.6 0 0 0-.6-.5h-3.4a.6.6 0 0 0-.6.5l-.3 2a7 7 0 0 0-1.6.9l-1.9-.8a.6.6 0 0 0-.8.2L3.6 8.2a.6.6 0 0 0 .2.8l1.7 1.1-.1.9.1.9-1.7 1.1a.6.6 0 0 0-.2.8l1.7 2.9c.2.3.5.4.8.2l1.9-.8c.5.4 1 .7 1.6.9l.3 2c0 .3.3.5.6.5h3.4c.3 0 .6-.2.6-.5l.3-2c.6-.2 1.1-.5 1.6-.9l1.9.8c.3.1.6 0 .8-.2l1.7-2.9a.6.6 0 0 0-.2-.8Z"/></svg>
+      </button>
+    </header>
+
+    <main>
+      <!-- Calculadora -->
+      <section id="vista-calc" class="vista activa" role="tabpanel" aria-labelledby="tab-calc">
+        <div class="calc-izq">
+          <div class="entrada-tarjeta">
+            <div class="entrada-barra">
+              <button class="chip" id="btn-angulo" title="Unidad de los ángulos">DEG</button>
+              <button class="chip" id="btn-historial" title="Historial">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M13 3a9 9 0 0 0-9 9H1l3.9 3.9.1.1L9 12H6a7 7 0 1 1 2.1 5l-1.4 1.4A9 9 0 1 0 13 3Zm-1 5v5l4.3 2.5.7-1.2-3.5-2.1V8H12Z"/></svg>
+                Historial
+              </button>
+              <span class="espacio"></span>
+              <button class="chip" id="btn-limpiar" title="Borrar todo">Borrar</button>
+            </div>
+            <math-field id="mf" math-virtual-keyboard-policy="manual" smart-fence="true" aria-label="Expresión"></math-field>
+            <div id="previa" class="previa" aria-live="polite"></div>
+          </div>
+          <div class="zona-media">
+            <div class="ejemplos" id="ejemplos" aria-label="Ejemplos"></div>
+          </div>
+          <div id="teclado" class="teclado" aria-label="Teclado matemático"></div>
+        </div>
+
+        <div class="calc-der" id="panel-solucion" aria-live="polite">
+          <div class="solucion-vacia" id="solucion-vacia">
+            <div class="vacia-icono">½</div>
+            <p>Escribí una cuenta o una ecuación y tocá <span class="tecla-mini">=</span> para ver la solución y los pasos.</p>
+          </div>
+          <div class="solucion" id="solucion" hidden>
+            <div class="solucion-cabecera">
+              <button class="icono volver" id="btn-volver" aria-label="Volver a editar">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M15.4 5.4 14 4l-8 8 8 8 1.4-1.4L8.8 12z"/></svg>
+              </button>
+              <h2 id="solucion-titulo">Solución</h2>
+            </div>
+            <div class="solucion-cuerpo" id="solucion-cuerpo"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Distribuciones -->
+      <section id="vista-dist" class="vista" role="tabpanel" aria-labelledby="tab-dist" hidden>
+        <div class="dist-selector" id="dist-selector" role="radiogroup" aria-label="Distribución"></div>
+        <div class="tarjeta area-params">
+          <div class="params" id="dist-params"></div>
+          <div class="resumen" id="dist-resumen"></div>
+        </div>
+        <div class="tarjeta area-grafico">
+          <canvas id="dist-grafico" aria-label="Gráfico de la distribución"></canvas>
+        </div>
+        <div class="tarjeta area-valores">
+          <div class="segmentado" id="dist-modo" role="radiogroup" aria-label="Qué calcular"></div>
+          <div class="valores" id="dist-valores"></div>
+        </div>
+        <div class="tarjeta area-resultado" id="dist-resultado"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="teclado-num" class="teclado-num" hidden></div>
+
+  <dialog id="dlg-historial" class="hoja">
+    <div class="hoja-cabecera"><h2>Historial</h2><button class="icono" data-cerrar aria-label="Cerrar">✕</button></div>
+    <ul id="lista-historial" class="lista-historial"></ul>
+    <div class="hoja-pie"><button class="boton secundario" id="btn-borrar-historial">Borrar historial</button></div>
+  </dialog>
+
+  <dialog id="dlg-ajustes" class="hoja">
+    <div class="hoja-cabecera"><h2>Ajustes</h2><button class="icono" data-cerrar aria-label="Cerrar">✕</button></div>
+    <div class="ajustes">
+      <label class="ajuste">Decimales en distribuciones
+        <select id="aj-decimales">
+          <option value="4">4</option><option value="5">5</option><option value="6" selected>6</option><option value="8">8</option><option value="10">10</option>
+        </select>
+      </label>
+      <label class="ajuste">Tema
+        <select id="aj-tema">
+          <option value="auto" selected>Automático</option><option value="light">Claro</option><option value="dark">Oscuro</option>
+        </select>
+      </label>
+      <p class="nota" id="estado-offline">Comprobando si funciona sin conexión…</p>
+      <p class="nota">Las probabilidades se calculan con funciones exactas (no se interpolan tablas). Validadas contra scipy.</p>
+    </div>
+  </dialog>
+
+  <div id="aviso" class="aviso" role="status" hidden></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

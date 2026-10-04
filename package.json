@@ -1,0 +1,14 @@
+{
+  "name": "calcu",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Calculadora offline (PWA): entrada matemática tipo Photomath y distribuciones de probabilidad",
+  "scripts": {
+    "servir": "python3 -m http.server 8790"
+  },
+  "devDependencies": {
+    "@cortex-js/compute-engine": "0.147.0",
+    "mathlive": "0.111.0"
+  }
+}
