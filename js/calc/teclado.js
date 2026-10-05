@@ -38,6 +38,16 @@ const PESTANAS = {
     T('<', { ins: '<' }, 'fn'), T('>', { ins: '>' }, 'fn'), T('\\le', { ins: '\\le' }, 'fn'), T('\\ge', { ins: '\\ge' }, 'fn'),
     T('\\ne', { ins: '\\ne' }, 'fn'), T('x', { esc: 'x' }), T('y', { esc: 'y' }), T('\\begin{cases}\\square\\\\\\square\\end{cases}', { ins: '\\begin{cases}#?\\\\#?\\end{cases}' }, 'fn chica', 'Sistema de ecuaciones'),
   ],
+  'Z t χ²': [
+    T('Z_{(p)}', { ins: 'Z_{\\left(#?\\right)}' }, 'fn chica', 'Fractil Z (p acumulado a izquierda)'),
+    T('t_{(p;\\nu)}', { ins: 't_{\\left(#?;#?\\right)}' }, 'fn chica', 'Fractil t de Student'),
+    T('\\chi^2_{(p;\\nu)}', { ins: '\\chi^2_{\\left(#?;#?\\right)}' }, 'fn chica', 'Fractil chi cuadrado'),
+    T('F_{(p;\\nu_1;\\nu_2)}', { ins: 'F_{\\left(#?;#?;#?\\right)}' }, 'fn diminuta', 'Fractil F'),
+    T('\\Phi(z)', { ins: '\\Phi\\left(#0\\right)' }, 'fn chica', 'Normal acumulada Φ(z)'), T(';', { esc: ';' }, 'fn', 'Punto y coma'),
+    T('\\frac{\\square}{\\square}', { ins: '\\frac{#@}{#?}' }, 'fn', 'Fracción'), T('\\sqrt{\\square}', { ins: '\\sqrt{#0}' }, 'fn', 'Raíz cuadrada'),
+    T('(', { esc: '(' }, 'fn'), T(')', { esc: ')' }, 'fn'), T('\\square^2', { ins: '#@^{2}' }, 'fn', 'Al cuadrado'), T('\\square^{\\square}', { ins: '#@^{#?}' }, 'fn', 'Potencia'),
+    T('n', { esc: 'n' }), T('x', { esc: 'x' }), T('=', { ins: '=' }, 'fn', 'Igual (ecuación)'), { h: 'Ans', esp: 'ans', clase: 'fn chica', titulo: 'Último resultado' },
+  ],
 };
 
 const LETRAS = [
@@ -123,14 +133,14 @@ export function crearTeclado(contenedor, mf, { alResolver, alAns }) {
     const tabs = document.createElement('div');
     tabs.className = 'teclado-tabs';
     tabs.setAttribute('role', 'tablist');
-    for (const nombre of ['123', 'f(x)', '∫', 'abc']) {
+    for (const nombre of ['123', 'f(x)', '∫', 'Z t χ²', 'abc']) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'tab';
       b.textContent = nombre;
       b.setAttribute('role', 'tab');
       b.setAttribute('aria-selected', String(nombre === pestana));
-      b.title = { '123': 'Básico', 'f(x)': 'Funciones', '∫': 'Cálculo y desigualdades', abc: 'Letras' }[nombre];
+      b.title = { '123': 'Básico', 'f(x)': 'Funciones', '∫': 'Cálculo y desigualdades', 'Z t χ²': 'Estadística: fractiles Z, t, χ², F y Φ', abc: 'Letras' }[nombre];
       b.addEventListener('pointerdown', (e) => e.preventDefault());
       b.addEventListener('click', () => { pestana = nombre; dibujar(); });
       tabs.append(b);

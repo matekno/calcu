@@ -58,14 +58,7 @@ export function iniciarDistribuciones(preferencias) {
     alOcultar: () => vista.classList.remove('con-teclado'),
   });
 
-  const grafico = crearGrafico(canvas, {
-    alMover: (cual, v) => {
-      estado[cual] = v;
-      if (cual !== 'x' && estado.a > estado.b) [estado.a, estado.b] = [estado.b, estado.a];
-      estado.origen = 'x';
-      recalcular({ refrescarCampos: true });
-    },
-  });
+  const grafico = crearGrafico(canvas);
 
   // ---- Selector de distribución ----
   const dibujarSelector = () => {
@@ -151,7 +144,7 @@ export function iniciarDistribuciones(preferencias) {
       : campo({ id: 'val-a', simbolo: 'a', nombre: '', valor: '' }) + campo({ id: 'val-b', simbolo: 'b', nombre: '', valor: '' }))
       + campo({ id: 'val-p', simbolo: '', nombre: '', valor: '', clase: 'prob' }).replace('<span class="simbolo"></span>', probEtq)
       + `<p class="ayuda-valores">${dos
-        ? 'Escribí x para obtener la probabilidad, o la probabilidad para obtener x (el fractil). También podés arrastrar sobre el gráfico.'
+        ? 'Escribí x para obtener la probabilidad, o la probabilidad para obtener x (el fractil).'
         : estado.modo === 'entre'
           ? 'Con a y b da la probabilidad del medio. Con la probabilidad da el intervalo central (mitad de lo que sobra en cada cola).'
           : 'Con a y b da la suma de las dos colas. Con α da los críticos de un ensayo bilateral (α/2 en cada cola).'}</p>`;

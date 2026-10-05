@@ -18,7 +18,13 @@ guardada). Dos partes:
 - A la derecha siempre están los números y las cuatro operaciones; a la izquierda, la pestaña elegida:
   **123** (x, fracción, potencias, raíces, π, e, |x|, %, =, Ans, notación científica), **f(x)** (trigonométricas y sus
   inversas, grados °, log, ln, log en base b, eˣ, n!, combinatorio), **∫** (derivada, integrales, límite, sumatoria,
-  ∞, i, número mixto, desigualdades) y **abc** (letras).
+  ∞, i, número mixto, desigualdades, sistema de ecuaciones), **Z t χ²** (fractiles y normal acumulada) y **abc**
+  (letras).
+- **Z, t, χ², F y Φ dentro de las cuentas**, en notación de cátedra: `Z(0,975)`, `t(0,975 ; 15)`, `χ²(0,025 ; 24)`,
+  `F(0,95 ; 5 ; 10)` como subíndice y `Φ(1,96)`. Los fractiles van por el nivel acumulado a **izquierda** y los datos
+  se separan con punto y coma (pueden ser cuentas: `t(1 − 0,05/2 ; n − 1)` con números). Sirven en expresiones y en
+  ecuaciones: `50 + Z(0,975)·10/√25`, `24·4,5²/χ²(0,975 ; 24)` o `Z(0,975)·10/√n = 2` para despejar n. La solución
+  muestra los valores de tabla usados (con 6 decimales) y la cuenta se hace con el valor completo.
 - La tecla de fracción toma lo que escribiste antes como numerador (como Photomath). Con **›** salís del casillero.
 - En la compu se puede tipear: `/` arma la fracción, `^` la potencia, `sqrt` o `raiz` la raíz, `sen` o `sin` el
   seno, `pi` el π. **Enter** resuelve. La coma decimal es `,` (también acepta el punto).
@@ -35,7 +41,6 @@ guardada). Dos partes:
 - Elegís la distribución y los parámetros; el modo: **P(X ≤ x)**, **P(X ≥ x)**, **P(a ≤ X ≤ b)** o **2 colas**.
 - Funciona para los dos lados: escribís x y da la probabilidad, o escribís la probabilidad y da x (el fractil).
   En «entre» la probabilidad da el intervalo central y en «2 colas», α da los críticos de un ensayo bilateral.
-- Se puede arrastrar sobre el gráfico para mover el corte.
 - En los campos se pueden escribir cuentas: `1-0,05/2`, `68/40`, `raiz(2)`, `5%`. En el celu aparece un teclado
   numérico con signo menos, barra y paréntesis (el del sistema no los tiene).
 - Resultado en notación de cátedra: `Φ(z)`, `F_t(x ; ν)`, `G_χ²`, fractiles por el nivel acumulado a **izquierda**

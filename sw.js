@@ -1,5 +1,5 @@
 // Generado por herramientas/armar-sw.mjs: no editar a mano.
-const VERSION = '439191628180';
+const VERSION = 'd76f0475887b';
 const CACHE = `calcu-${VERSION}`;
 const ARCHIVOS = [
   "./",
@@ -12,6 +12,7 @@ const ARCHIVOS = [
   "./index.html",
   "./js/almacen.js",
   "./js/calc/calculadora.js",
+  "./js/calc/fractiles.js",
   "./js/calc/motor.js",
   "./js/calc/pasos.js",
   "./js/calc/teclado.js",

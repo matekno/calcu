@@ -199,13 +199,13 @@ math-field:focus-within { outline: none; }
   user-select: none; -webkit-user-select: none;
   touch-action: manipulation;
 }
-.teclado-tabs { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+.teclado-tabs { display: flex; gap: 4px; margin-bottom: 6px; align-items: center; }
 .teclado-tabs .tab {
   border: 0; background: transparent; color: var(--suave);
-  font-weight: 700; font-size: 14px; padding: 0 10px; height: 36px; border-radius: 9px; min-width: 44px;
+  font-weight: 700; font-size: 14px; padding: 0 8px; height: 36px; border-radius: 9px; min-width: 40px; white-space: nowrap;
 }
 .teclado-tabs .tab[aria-selected="true"] { background: var(--tecla-fn); color: var(--texto); }
-.teclado-tabs .nav { margin-left: auto; display: flex; gap: 6px; }
+.teclado-tabs .nav { margin-left: auto; display: flex; gap: 4px; }
 .teclado-cuerpo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .teclado-cuerpo.ancho { grid-template-columns: 1fr; }
 .bloque { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
@@ -230,8 +230,9 @@ math-field:focus-within { outline: none; }
 .tecla.acento { background: var(--acento); color: var(--acento-texto); border-color: var(--acento-fuerte); font-size: 26px; font-weight: 700; }
 .tecla.acento:active { background: var(--acento-fuerte); }
 .tecla.chica { font-size: 15px; }
+.tecla.diminuta { font-size: 12px; }
 .tecla .ML__latex { font-size: 0.9em; pointer-events: none; }
-.tecla.nav-tecla { height: 36px; width: 48px; font-size: 18px; background: var(--tecla-fn); }
+.tecla.nav-tecla { height: 36px; width: 44px; font-size: 18px; background: var(--tecla-fn); }
 .tecla svg { pointer-events: none; }
 
 /* Panel de solución */
@@ -346,7 +347,7 @@ math-field:focus-within { outline: none; }
 .ayuda-valores { grid-column: 1 / -1; font-size: 12.5px; color: var(--tenue); margin: 0; }
 
 .area-grafico { padding: 8px; }
-#dist-grafico { width: 100%; height: 230px; display: block; touch-action: none; cursor: ew-resize; }
+#dist-grafico { width: 100%; height: 230px; display: block; pointer-events: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 
 .res-principal { font-size: 22px; overflow-x: auto; padding: 2px 0 6px; }
 .res-lineas { display: grid; gap: 6px; }
@@ -450,6 +451,10 @@ math-field:focus-within { outline: none; }
 @media (max-width: 460px) {
   .barra { gap: 8px; padding: 8px 12px; }
   .marca { font-size: 0; gap: 0; }
+}
+@media (max-width: 400px) {
+  .teclado-tabs .tab { padding: 0 5px; min-width: 32px; font-size: 13px; }
+  .tecla.nav-tecla { width: 38px; }
 }
 @media (max-width: 380px) {
   .pestanas button { padding: 7px 10px; font-size: 13px; }

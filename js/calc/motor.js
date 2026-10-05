@@ -2,6 +2,7 @@
 // Devuelve LaTeX con punto decimal: la interfaz lo pasa a coma al dibujarlo.
 
 import { ComputeEngine, compile } from '../../vendor/compute-engine/compute-engine.js';
+import { reemplazarDistribuciones } from './fractiles.js';
 
 let ce = null;
 export function motor() {
@@ -113,6 +114,11 @@ function formasNumero(exacto, entradaCanonica) {
     if (todos) formas.push({ etiqueta: 'Entero exacto', tex: todos, largo: true });
     return { principal: texDec, formas, valor: dec };
   }
+  // Un decimal con más de 10 cifras (por ejemplo, con un fractil adentro) se muestra redondeado.
+  if (decimalLargo(exacto)) {
+    formas.push({ etiqueta: 'Decimal', tex: texDec, aprox: true });
+    return { principal: texDec, principalAprox: true, formas, valor: dec };
+  }
   const lindo = esLindo(json);
   let principal;
   if (lindo) {
@@ -144,8 +150,18 @@ function formasNumero(exacto, entradaCanonica) {
   return { principal, formas, aprox: lindo ? texDec : null, valor: dec };
 }
 
+function decimalLargo(e) {
+  if (!e.isNumberLiteral || e.isInteger || e.operator === 'Rational') return false;
+  const json = e.json;
+  const t = String(typeof json === 'number' ? json : json?.num ?? '');
+  return /^-?\d*\.\d+$/.test(t) && t.replace(/^-?0*\.?0*/, '').replace('.', '').length > 10;
+}
+
 function texSolucion(sol, grados) {
   const dec = decimal(sol);
+  if (dec && decimalLargo(sol)) {
+    return { tex: texDecimal(dec) + (grados ? '^{\\circ}' : ''), aprox: null, valor: dec, rel: '\\approx ' };
+  }
   let exacto = prolijo(sol.latex);
   const texDec = dec ? texDecimal(dec) : null;
   const igual = !texDec || texDec === exacto || texDec.replace(/i$/, '\\mathrm{i}') === exacto;
@@ -316,14 +332,24 @@ function resolverInecuacion(c, expr, v) {
 export function resolver(latexOriginal, { angulo = 'deg', conPasos = false, generarPasos = null } = {}) {
   const c = motor();
   c.angularUnit = angulo;
-  const latex = normalizar(latexOriginal);
-  if (!latex) return { tipo: 'vacio' };
-  if (incompleto(latex)) return { tipo: 'incompleto' };
+  const escrito = normalizar(latexOriginal);
+  if (!escrito) return { tipo: 'vacio' };
+  if (incompleto(escrito)) return { tipo: 'incompleto' };
+
+  // Z, t, χ², F y Φ se reemplazan por su valor antes de que los vea Compute Engine.
+  const tablas = reemplazarDistribuciones(escrito, (arg) => {
+    const e = c.parse(arg);
+    if (!e.isValid || (e.unknowns ?? []).length) return NaN;
+    const n = e.N();
+    return Math.abs(n.im ?? 0) > 0 ? NaN : n.re;
+  });
+  if (tablas.error) return { tipo: 'error', mensaje: tablas.error };
+  const latex = tablas.latex;
 
   const expr = c.parse(latex);
   if (!expr.isValid) return { tipo: 'error', mensaje: 'La expresión está incompleta o tiene un error de escritura.' };
 
-  const res = { tipo: 'numero', entrada: latex, formas: [], avisos: [] };
+  const res = { tipo: 'numero', entrada: escrito, formas: [], avisos: [], tablas: tablas.usados };
   if (angulo === 'deg' && /\\pi/.test(latex) && /\\(sin|cos|tan|cot|sec|csc)/.test(latex)) {
     res.avisos.push('Estás en grados (DEG) y el ángulo tiene π: si era en radianes, cambiá a RAD.');
   }
@@ -362,9 +388,9 @@ export function resolver(latexOriginal, { angulo = 'deg', conPasos = false, gene
           .map((u) => u.s);
         res.soluciones = sols.map((s) => texSolucion(s, trigo && angulo === 'deg'));
         if (sols.length) {
-          res.principal = res.soluciones.map((s, i) => `${conNombre(i, sols.length)}=${s.tex}`).join(',\\quad ');
+          res.principal = res.soluciones.map((s, i) => `${conNombre(i, sols.length)}${s.rel ?? '='}${s.tex}`).join(',\\quad ');
           res.soluciones.forEach((s, i) => {
-            res.formas.push({ etiqueta: sols.length > 1 ? `Solución ${i + 1}` : 'Solución', tex: `${conNombre(i, sols.length)}=${s.tex}`, aprox: s.aprox });
+            res.formas.push({ etiqueta: sols.length > 1 ? `Solución ${i + 1}` : 'Solución', tex: `${conNombre(i, sols.length)}${s.rel ?? '='}${s.tex}`, aprox: s.aprox });
           });
           if (trigo) res.avisos.push('Ecuación trigonométrica: son las soluciones principales; se repiten cada período (2π, o π con tangente).');
         } else if (f.simplify().is(0)) {
@@ -410,7 +436,7 @@ export function resolver(latexOriginal, { angulo = 'deg', conPasos = false, gene
     if (res.aviso) { res.tipo = 'error'; res.mensaje = res.aviso; }
   }
 
-  if (conPasos && generarPasos) {
+  if (conPasos && generarPasos && !tablas.usados.length) {
     try {
       res.pasos = generarPasos(latex, { ce: c, angulo });
     } catch (e) {

@@ -1,5 +1,5 @@
 import { MathfieldElement, convertLatexToMarkup } from '../../vendor/mathlive/mathlive.min.mjs';
-import { texACom } from '../formato.js';
+import { texACom, fijoTex } from '../formato.js';
 import { crearTeclado } from './teclado.js';
 import { leer, guardar } from '../almacen.js';
 
@@ -108,6 +108,8 @@ export function iniciarCalculadora() {
     if (r.tipo === 'error') return `<span class="error">${r.mensaje ?? ''}</span>`;
     if (!r.principal) return '';
     if (r.tipo === 'numero') {
+      const dec0 = r.formas.find((f) => f.etiqueta === 'Decimal');
+      if (r.principalAprox || (dec0?.aprox && dec0.tex === r.principal)) return mathHTML(`\\approx ${r.principal}`);
       const partes = [];
       const suelto = (t) => t.replace(/\\left|\\right|[{}\s]/g, '');
       if (suelto(r.principal) !== suelto(r.entrada)) partes.push(mathHTML(`=${r.principal}`));
@@ -178,9 +180,13 @@ export function iniciarCalculadora() {
         const aprox = r.formas.filter((f) => f.aprox);
         if (aprox.length) html += `<div class="sol-formas">${aprox.map((f) => fila('Decimal', `${f.tex.split('=')[0]}\\approx ${f.aprox}`)).join('')}</div>`;
       } else if (primera) {
-        html += `<div class="sol-principal">${mathHTML(primera.tex)}</div>`;
+        html += `<div class="sol-principal">${mathHTML(primera.aprox === true && !primera.tex.includes('approx') ? `\\approx ${primera.tex}` : primera.tex)}</div>`;
         if (primera.texto) html += `<p class="paso-texto">${primera.texto}</p>`;
         if (resto.length) html += `<div class="sol-formas">${resto.map((f) => fila(f.etiqueta, f.aprox === true && !f.tex.includes('approx') ? `\\approx ${f.tex}` : f.tex, f.largo)).join('')}</div>`;
+      }
+      if (r.tablas?.length) {
+        html += `<div class="sol-formas"><p class="sol-etiqueta">Valores de tabla</p>${r.tablas.map((t) => `<div class="sol-forma"><span class="valor">${mathHTML(`${t.tex.replace(/;/g, '\\,;\\,')}=${fijoTex(t.valor, 6)}`)}</span></div>`).join('')}</div>`;
+        html += '<p class="paso-texto">Fractiles por el nivel acumulado a izquierda. La cuenta usa el valor completo, no el redondeado.</p>';
       }
       if (r.avisos?.length) html += `<ul class="sol-avisos">${r.avisos.map((a) => `<li>${a}</li>`).join('')}</ul>`;
       html += `<div class="acciones"><button class="boton secundario" data-accion="editar">Editar</button>`;

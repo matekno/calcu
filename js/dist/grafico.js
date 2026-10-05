@@ -26,9 +26,8 @@ export function dentro(v, { modo, x, a, b }) {
   return v <= a || v >= b;
 }
 
-export function crearGrafico(canvas, { alMover }) {
+export function crearGrafico(canvas) {
   let ultimo = null;
-  let escala = null;
 
   const dibujar = (datos) => {
     ultimo = datos;
@@ -60,8 +59,6 @@ export function crearGrafico(canvas, { alMover }) {
     const anchoUtil = W - m.izq - m.der, altoUtil = H - m.arr - m.aba;
     const desde = dist.discreta ? lo - 0.6 : lo, hasta = dist.discreta ? hi + 0.6 : hi;
     const px = (v) => m.izq + ((v - desde) / (hasta - desde)) * anchoUtil;
-    const vx = (p) => desde + ((p - m.izq) / anchoUtil) * (hasta - desde);
-    escala = { vx, discreta: dist.discreta, sLo, sHi };
 
     // Valores
     let puntos = [];
@@ -164,25 +161,6 @@ export function crearGrafico(canvas, { alMover }) {
       g.fillText(`P = ${numTexto(prob, { sig: 6 })}`, W - m.der, 4);
     }
   };
-
-  // Arrastrar sobre el gráfico mueve el corte más cercano.
-  let arrastrando = false;
-  const mover = (e) => {
-    if (!escala || !ultimo) return;
-    const r = canvas.getBoundingClientRect();
-    let v = escala.vx(e.clientX - r.left);
-    if (escala.discreta) v = Math.round(v);
-    v = Math.min(Math.max(v, escala.sLo), escala.sHi);
-    if (!escala.discreta) v = Number(v.toPrecision(4));
-    let cual = 'x';
-    if (ultimo.modo === 'entre' || ultimo.modo === 'colas') cual = Math.abs(v - ultimo.a) <= Math.abs(v - ultimo.b) ? 'a' : 'b';
-    alMover(cual, v);
-  };
-  canvas.addEventListener('pointerdown', (e) => { arrastrando = true; canvas.setPointerCapture(e.pointerId); mover(e); });
-  canvas.addEventListener('pointermove', (e) => { if (arrastrando) mover(e); });
-  const soltar = () => { arrastrando = false; };
-  canvas.addEventListener('pointerup', soltar);
-  canvas.addEventListener('pointercancel', soltar);
 
   new ResizeObserver(() => { if (ultimo) dibujar(ultimo); }).observe(canvas);
   return { dibujar, redibujar: () => ultimo && dibujar(ultimo) };
